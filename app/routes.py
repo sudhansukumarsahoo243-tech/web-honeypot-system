@@ -1,6 +1,6 @@
 import os
-token=os.getenv("TELEGRAM_TOKEN")
-chat_id = os.getenv("TELEGRAM_CHAT_ID")
+token=os.getenv("BOT_TOKEN")
+chat_id = os.getenv("CHAT_ID")
 import requests
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 import time
@@ -18,8 +18,8 @@ def send_telegram_alert(message):
         print("Cooldown active. Alert skipped.")
         return
 
-    token = os.environ.get("TELEGRAM_TOKEN")
-    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    token = os.environ.get("BOT_TOKEN")
+    chat_id = os.environ.get("CHAT_ID")
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
