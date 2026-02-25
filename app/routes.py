@@ -18,8 +18,8 @@ def send_telegram_alert(message):
         print("Cooldown active. Alert skipped.")
         return
 
-    token = "8653606042:AAHztP3P7sZSDEBlm_I94pKsTRbxOvV74NU"
-    chat_id = "5523320415"
+    token = os.environ.get("TELEGRAM_TOKEN")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
