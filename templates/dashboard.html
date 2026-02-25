@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Security Monitoring Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+
+<h1 class="dashboard-title">Security Monitoring Dashboard</h1>
+
+<div class="metrics">
+    <div class="card">
+        <h3>Total Attempts</h3>
+        <p>{{ total_attempts }}</p>
+    </div>
+    <div class="card">
+        <h3>Unique IPs</h3>
+        <p>{{ unique_ips }}</p>
+    </div>
+    <div class="card">
+        <h3>Suspicious Activity</h3>
+        <p>{{ brute_force_count }}</p>
+    </div>
+</div>
+
+<table>
+    <tr>
+        <th>IP Address</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Time</th>
+        <th>Status</th>
+    </tr>
+    {% for attempt in attempts %}
+    <tr class="{% if attempt.flagged != 'Normal' %}alert-row{% endif %}">
+        <td>{{ attempt.ip_address }}</td>
+        <td>{{ attempt.username }}</td>
+        <td>{{ attempt.password }}</td>
+        <td>{{ attempt.timestamp }}</td>
+        <td>{{ attempt.flagged }}</td>
+    </tr>
+    {% endfor %}
+</table>
+ <!-- 🔥 ADD CHART BELOW TABLE -->
+    <h2 style="text-align:center; margin-top:40px;">Attack Analytics</h2>
+
+    <canvas id="attackChart" width="400" height="150"></canvas>
+
+    <script>
+    const ctx = document.getElementById('attackChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total Attempts', 'Unique IPs', 'Suspicious'],
+            datasets: [{
+                label: 'Attack Metrics',
+                data: [{{ total_attempts }}, {{ unique_ips }}, {{ brute_force_count }}],
+                borderWidth: 1
+            }]
+        }
+    });
+    </script>
+    <script>
+setInterval(function() {
+    fetch('/api/metrics')
+    .then(response => response.json())
+    .then(data => {
+        location.reload();
+    });
+}, 5000);
+</script>
+</body>
+</html>
